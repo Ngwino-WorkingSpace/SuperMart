@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav className="bg-white sticky top-0 z-50 shadow-sm">
       <div className="max-w-[1280px] mx-auto px-12 py-3 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center flex-shrink-0">
+        <div className="flex-1 flex items-center justify-start">
           <Image
             src="/Logo.png"
             alt="Simba"
@@ -23,7 +23,7 @@ export default function Navbar() {
         </div>
 
         {/* Nav links - Center */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center justify-center gap-8">
           {[
             { label: "Home", active: true, href: "/" },
             { label: "About", active: false, href: "#" },
@@ -64,7 +64,7 @@ export default function Navbar() {
         </div>
 
         {/* Actions - Right */}
-        <div className="flex items-center gap-4">
+        <div className="flex-1 flex items-center justify-end gap-4">
           <div className="flex items-center gap-3 pr-4 border-r border-gray-100">
             {/* User Icon & Menu */}
             <div className="relative group">
