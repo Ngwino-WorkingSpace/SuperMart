@@ -66,7 +66,7 @@ export default function Footer() {
 
                 {/* Huge Background Text */}
                 <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 select-none pointer-events-none w-full text-center">
-                    <h2 className="text-[25vw] font-black tracking-tighter leading-none opacity-50" style={{ color: '#fff5e6' }}>
+                    <h2 className="text-[25vw] font-black tracking-tighter leading-none opacity-80" style={{ color: '#feeddb' }}>
                         SIMBA
                     </h2>
                 </div>
