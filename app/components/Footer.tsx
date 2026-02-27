@@ -5,7 +5,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Brand */}
                     <div>
-                        <h3 className="text-2xl font-bold italic mb-4">Ecolive</h3>
+                        <h3 className="text-2xl font-bold italic mb-4">Simba</h3>
                         <p className="text-sm opacity-80 leading-relaxed mb-4">
                             Your trusted source for fresh, organic, and natural groceries
                             delivered straight to your door.
@@ -70,14 +70,14 @@ export default function Footer() {
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                     <polyline points="22,6 12,13 2,6" />
                                 </svg>
-                                info@ecolive.com
+                                info@simba.com
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="border-t border-white/10 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between text-sm opacity-60">
-                    <p>&copy; 2026 Ecolive. All rights reserved.</p>
+                    <p>&copy; 2026 Simba. All rights reserved.</p>
                     <div className="flex items-center gap-4 mt-2 md:mt-0">
                         <a href="#">Privacy Policy</a>
                         <a href="#">Terms of Service</a>

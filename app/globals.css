@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --green-primary: #1a5632;
-  --green-dark: #134225;
-  --green-light: #e8f5e1;
-  --green-accent: #3d9b35;
-  --yellow-primary: #f5a623;
+  --green-primary: #fc7d00;
+  --green-dark: #d96a00;
+  --green-light: #fff3e6;
+  --green-accent: #e87400;
+  --yellow-primary: #fc7d00;
   --yellow-light: #fef9e7;
   --yellow-badge: #e8a700;
   --orange-primary: #e67e22;
-  --bg-cream: #faf8f3;
-  --bg-light-green: #f5f9f2;
+  --bg-cream: #fffaf5;
+  --bg-light-green: #fff8f0;
   --text-dark: #1a1a1a;
   --text-gray: #6b7280;
   --text-light-gray: #9ca3af;
@@ -33,7 +33,7 @@ body {
 
 /* Top Bar */
 .top-bar {
-  background: var(--green-primary);
+  background: #fc7d00;
   color: white;
   font-size: 0.8rem;
   padding: 8px 0;
@@ -74,14 +74,14 @@ body {
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #fef9e7 0%, #fdf3d0 100%);
+  background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
   border-radius: 16px;
   overflow: hidden;
 }
 
 .hero-badge {
-  background: var(--green-light);
-  color: var(--green-primary);
+  background: #fff3e6;
+  color: #fc7d00;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 6px 16px;
@@ -116,7 +116,7 @@ body {
 .shop-now-btn:hover {
   background: var(--green-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(26, 86, 50, 0.3);
+  box-shadow: 0 4px 12px rgba(252, 125, 0, 0.3);
 }
 
 .promo-card {
@@ -126,11 +126,11 @@ body {
 }
 
 .promo-card-yellow {
-  background: linear-gradient(135deg, #f7dc6f 0%, #f0b429 100%);
+  background: linear-gradient(135deg, #ffe0b2 0%, #ffb74d 100%);
 }
 
 .promo-card-green {
-  background: linear-gradient(135deg, #e8f5e1 0%, #c7e8b8 100%);
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
 }
 
 /* Category Section */
@@ -160,7 +160,7 @@ body {
 
 .category-item:hover .category-circle {
   border-color: var(--green-primary);
-  box-shadow: 0 4px 16px rgba(26, 86, 50, 0.15);
+  box-shadow: 0 4px 16px rgba(252, 125, 0, 0.15);
 }
 
 .category-name {
@@ -312,7 +312,7 @@ body {
 }
 
 .promo-banner-green {
-  background: linear-gradient(135deg, #d4edc9 0%, #b8dfa8 100%);
+  background: linear-gradient(135deg, #ffe8cc 0%, #ffd6a0 100%);
 }
 
 .promo-banner-dark {
