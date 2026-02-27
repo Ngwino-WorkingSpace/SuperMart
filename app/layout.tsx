@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CartProvider } from "./context/CartContext";
+import CartSidebar from "./components/CartSidebar";
 
 export const metadata: Metadata = {
   title: "Ecolive - Fresh Organic Groceries",
-  description: "Shop fresh, organic fruits, vegetables, dairy, and more at Ecolive. Best deals on healthy food delivered to your door.",
+  description:
+    "Shop fresh, organic fruits, vegetables, dairy, and more at Ecolive. Best deals on healthy food delivered to your door.",
 };
 
 export default function RootLayout({
@@ -20,7 +23,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <CartProvider>
+          {children}
+          <CartSidebar />
+        </CartProvider>
       </body>
     </html>
   );
