@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
@@ -62,32 +63,69 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right - CTA Button & Cart */}
-        <div className="flex items-center gap-6">
-          <button
-            onClick={toggleCart}
-            className="relative p-2 text-gray-700 hover:text-[#fc7d00] transition-colors"
-            aria-label="Toggle Cart"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+        {/* Actions - Right */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 pr-4 border-r border-gray-100">
+            {/* User Icon & Menu */}
+            <div className="relative group">
+              <button className="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-[#fc7d00] hover:border-[#fc7d00] transition-all duration-300">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              <div className="absolute top-[calc(100%+8px)] right-0 w-48 bg-white rounded-xl shadow-xl shadow-gray-200/50 border border-gray-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                <Link
+                  href="/auth?mode=login"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#fc7d00] transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/auth?mode=register"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 hover:text-[#fc7d00] transition-colors"
+                >
+                  Register
+                </Link>
+              </div>
+            </div>
+
+            <button
+              onClick={toggleCart}
+              className="relative w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center text-gray-400 hover:text-[#fc7d00] hover:border-[#fc7d00] transition-all duration-300"
             >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
-            </svg>
-            <span className="absolute -top-1 -right-1 bg-[#fc7d00] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
-              2
-            </span>
-          </button>
-          <button className="px-6 py-2.5 rounded-full border-2 border-[#fc7d00] text-[#fc7d00] text-sm font-semibold hover:bg-[#fc7d00] hover:text-white transition-all duration-300">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                <path d="M3 6h18" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#fc7d00] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-[#fc7d00]/20">
+                2
+              </span>
+            </button>
+          </div>
+
+          <button className="h-11 px-6 bg-[#1a1a1a] hover:bg-[#fc7d00] text-white text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-300 active:scale-95 shadow-lg shadow-gray-200">
             Get Started
           </button>
         </div>
