@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Jost, Dancing_Script } from "next/font/google";
+import { useCart } from "../context/CartContext";
 
 const jost = Jost({
     subsets: ["latin"],
@@ -16,6 +19,8 @@ const dancingScript = Dancing_Script({
 });
 
 export default function RestaurantPage() {
+    const { addToCart } = useCart();
+
     return (
         <div className={`min-h-screen bg-[#f4f4f6] text-[#1a1a1a] ${jost.variable} ${dancingScript.variable} font-sans flex flex-col overflow-hidden`}>
             <Navbar />
@@ -40,7 +45,7 @@ export default function RestaurantPage() {
                         </div>
                     </div>
 
-                    {/* Right Side: Hero Content */}
+             
                     <div className="w-full md:w-1/2 flex flex-col relative z-20">
 
                         {/* Badge Label */}
@@ -163,7 +168,9 @@ export default function RestaurantPage() {
                                 Aromatic, soft, and tender chunks of lamb layered with rice infused...
                             </p>
 
-                            <button className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
+                            <button
+                                onClick={() => addToCart({ id: 'res-1', name: 'Jeera Chawal', price: 180, image: '/images/food-chawal.png', quantity: 1, type: 'Dine In' })}
+                                className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
                                 Order Now
                             </button>
                         </div>
@@ -194,7 +201,9 @@ export default function RestaurantPage() {
                                 Aromatic chunks of chicken cooked in a traditional Indian wok with bell peppers...
                             </p>
 
-                            <button className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
+                            <button
+                                onClick={() => addToCart({ id: 'res-2', name: 'Kadai Chicken', price: 220, image: '/images/food-chicken.png', quantity: 1, type: 'Dine In' })}
+                                className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
                                 Order Now
                             </button>
                         </div>
@@ -225,7 +234,9 @@ export default function RestaurantPage() {
                                 Fresh spinach puree cooked with chunks of soft cottage cheese and aromatic Indian spices...
                             </p>
 
-                            <button className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
+                            <button
+                                onClick={() => addToCart({ id: 'res-3', name: 'Palak Paneer', price: 200, image: '/images/food-paneer.png', quantity: 1, type: 'Dine In' })}
+                                className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
                                 Order Now
                             </button>
                         </div>
@@ -256,7 +267,9 @@ export default function RestaurantPage() {
                                 Delicious penne pasta tossed in a fiery red arrabbiata sauce with garlic and herbs...
                             </p>
 
-                            <button className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
+                            <button
+                                onClick={() => addToCart({ id: 'res-4', name: 'Spicy Pasta', price: 240, image: '/images/cat-meat.png', quantity: 1, type: 'Dine In' })}
+                                className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
                                 Order Now
                             </button>
                         </div>
@@ -287,7 +300,9 @@ export default function RestaurantPage() {
                                 Classic Neapolitan style pizza with fresh mozzarella, tomatoes and basil...
                             </p>
 
-                            <button className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
+                            <button
+                                onClick={() => addToCart({ id: 'res-5', name: 'Italian Pizza', price: 310, image: '/images/hero-healthy.png', quantity: 1, type: 'Dine In' })}
+                                className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
                                 Order Now
                             </button>
                         </div>
@@ -318,7 +333,9 @@ export default function RestaurantPage() {
                                 A crisp mix of fresh lettuce, cherry tomatoes, cucumbers, and a light vinaigrette dressing...
                             </p>
 
-                            <button className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
+                            <button
+                                onClick={() => addToCart({ id: 'res-6', name: 'Healthy Salad', price: 150, image: '/images/cat-produce.png', quantity: 1, type: 'Dine In' })}
+                                className="bg-[#4a3424] hover:bg-[#3d2b1e] text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all active:scale-95 shadow-lg w-full">
                                 Order Now
                             </button>
                         </div>

@@ -11,6 +11,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  type?: "Delivery" | "Dine In" | "Takeaway";
 }
 
 interface CartContextType {
@@ -18,10 +19,12 @@ interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
   cartSubtotal: number;
+  activeTab: "Delivery" | "Dine In" | "Takeaway";
   isLoaded: boolean;
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
+  setActiveTab: (tab: "Delivery" | "Dine In" | "Takeaway") => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, delta: number) => void;
@@ -33,6 +36,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [activeTab, setActiveTab] = useState<"Delivery" | "Dine In" | "Takeaway">("Delivery");
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load cart from local storage on mount
@@ -61,26 +65,35 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
-  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const cartSubtotal = cartItems.reduce(
+  // Compute stats based on activeTab
+  const activeCartItems = cartItems.filter(item => (item.type || "Delivery") === activeTab);
+  const cartCount = activeCartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const cartSubtotal = activeCartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
 
   const addToCart = (newItem: CartItem) => {
+    // If no type is provided, default to Delivery
+    const itemType = newItem.type || "Delivery";
+
     setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === newItem.id);
+      // Items are unique not just by ID but also by order type
+      const existingItem = prevItems.find((item) => item.id === newItem.id && (item.type || "Delivery") === itemType);
       if (existingItem) {
         // Increment quantity if it already exists
         return prevItems.map((item) =>
-          item.id === newItem.id
+          item.id === newItem.id && (item.type || "Delivery") === itemType
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
       // Otherwise, add new item
-      return [...prevItems, { ...newItem, quantity: 1 }];
+      return [...prevItems, { ...newItem, quantity: 1, type: itemType }];
     });
+
+    // Switch to the appropriate tab so the user sees what they just added
+    setActiveTab(itemType);
     openCart(); // Automatically open cart when adding
   };
 
@@ -109,10 +122,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cartItems,
         cartCount,
         cartSubtotal,
+        activeTab,
         isLoaded,
         toggleCart,
         openCart,
         closeCart,
+        setActiveTab,
         addToCart,
         removeFromCart,
         updateQuantity,

@@ -6,7 +6,7 @@ import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
 
 export default function CartSidebar() {
-  const { isCartOpen, closeCart, cartItems, cartSubtotal, updateQuantity, removeFromCart } = useCart();
+  const { isCartOpen, closeCart, cartItems, cartSubtotal, updateQuantity, removeFromCart, activeTab, setActiveTab } = useCart();
   const router = useRouter();
 
   const handleConfirmOrder = () => {
@@ -95,21 +95,27 @@ export default function CartSidebar() {
               </div>
 
               {/* Order Type Tabs */}
-              <div className="grid grid-cols-3 gap-1 bg-gray-100 p-1 rounded-full mb-6">
-                <button className="bg-[#fc7d00] text-white rounded-full py-1.5 text-[10px] font-bold shadow-sm">
+              <div className="grid grid-cols-3 gap-1 bg-gray-100 p-1 rounded-full mb-6 relative">
+                <button
+                  onClick={() => setActiveTab("Delivery")}
+                  className={`relative z-10 rounded-full py-1.5 text-[10px] font-bold shadow-sm transition-all ${activeTab === "Delivery" ? "bg-[#fc7d00] text-white" : "text-gray-500 hover:text-gray-700"}`}>
                   Delivery
                 </button>
-                <button className="text-gray-500 py-1.5 text-[10px] font-bold">
+                <button
+                  onClick={() => setActiveTab("Dine In")}
+                  className={`relative z-10 rounded-full py-1.5 text-[10px] font-bold shadow-sm transition-all ${activeTab === "Dine In" ? "bg-[#fc7d00] text-white" : "text-gray-500 hover:text-gray-700"}`}>
                   Dine In
                 </button>
-                <button className="text-gray-500 border-l border-gray-200 py-1.5 text-[10px] font-bold">
+                <button
+                  onClick={() => setActiveTab("Takeaway")}
+                  className={`relative z-10 rounded-full py-1.5 text-[10px] font-bold shadow-sm transition-all ${activeTab === "Takeaway" ? "bg-[#fc7d00] text-white" : "text-gray-500 hover:text-gray-700"}`}>
                   Takeaway
                 </button>
               </div>
 
               {/* Cart Items */}
               <div className="flex-1 overflow-y-auto space-y-6 pr-1 scrollbar-hide py-2">
-                {cartItems.map((item) => (
+                {cartItems.filter(item => (item.type || "Delivery") === activeTab).map((item) => (
                   <div key={item.id} className="flex gap-3 items-center">
                     <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden relative shrink-0 border border-gray-100 p-1">
                       <img src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
