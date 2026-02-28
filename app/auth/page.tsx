@@ -13,7 +13,7 @@ function AuthContent() {
   const [mode, setMode] = useState<"login" | "register">(initialMode);
 
   return (
-    <div className="h-screen bg-white flex items-stretch font-['Poppins'] overflow-hidden">
+    <div className="h-screen bg-white flex items-stretch font-sans overflow-hidden">
       {/* Left Side: Form */}
       <div className="flex-1 flex flex-col px-8 lg:px-20 py-6 relative">
         {/* Logo */}
