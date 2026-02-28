@@ -2,10 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
-  const { toggleCart } = useCart();
+  const pathname = usePathname();
+  const { toggleCart, cartCount } = useCart();
+
+  const isHome = pathname === "/";
 
   return (
     <nav className="bg-white sticky top-0 z-50 shadow-sm">
@@ -30,7 +34,7 @@ export default function Navbar() {
             { label: "Shop", dropdown: true, href: "/shop" },
             { label: "Pages", dropdown: true, href: "#" },
             { label: "Blog", href: "#" },
-            { label: "Contact", href: "#" },
+            { label: "Contact", href: "/contact" },
           ].map((link) => {
             // Very simple active state logic
             // For a real app, use usePathname from next/navigation
@@ -41,8 +45,8 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors flex items-center gap-1 ${isActive
-                    ? "text-[#fc7d00]"
-                    : "text-gray-700 hover:text-[#fc7d00]"
+                  ? "text-[#fc7d00]"
+                  : "text-gray-700 hover:text-[#fc7d00]"
                   }`}
               >
                 {link.label}
@@ -125,7 +129,7 @@ export default function Navbar() {
                 <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#fc7d00] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-[#fc7d00]/20">
-                2
+                {cartCount}
               </span>
             </button>
           </div>

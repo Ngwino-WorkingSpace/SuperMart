@@ -5,27 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "../context/CartContext";
 import { useRouter } from "next/navigation";
 
-const cartItems = [
-  {
-    id: 1,
-    name: "Pepperoni Pizza",
-    description: "Thin Crust",
-    price: 77.6,
-    quantity: 2,
-    image: "/images/pizza.png",
-  },
-  {
-    id: 2,
-    name: "Cheese Burger",
-    description: "Whole wheat bun",
-    price: 82.6,
-    quantity: 2,
-    image: "/images/burger.png",
-  },
-];
-
 export default function CartSidebar() {
-  const { isCartOpen, closeCart } = useCart();
+  const { isCartOpen, closeCart, cartItems, cartSubtotal, updateQuantity, removeFromCart } = useCart();
   const router = useRouter();
 
   const handleConfirmOrder = () => {
@@ -33,12 +14,8 @@ export default function CartSidebar() {
     router.push("/checkout");
   };
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
-  );
-  const deliveryCharge = 10;
-  const total = subtotal + deliveryCharge;
+  const deliveryCharge = cartItems.length > 0 ? 10 : 0;
+  const total = cartSubtotal + deliveryCharge;
 
   return (
     <AnimatePresence>
@@ -134,10 +111,8 @@ export default function CartSidebar() {
               <div className="flex-1 overflow-y-auto space-y-6 pr-1 scrollbar-hide py-2">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-3 items-center">
-                    <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center p-1.5 shrink-0 border border-gray-100">
-                      <div className="bg-orange-50 rounded-full w-10 h-10 flex items-center justify-center text-xl">
-                        {item.name.includes("Pizza") ? "🍕" : "🍔"}
-                      </div>
+                    <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden relative shrink-0 border border-gray-100 p-1">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start gap-2">
@@ -146,10 +121,13 @@ export default function CartSidebar() {
                             {item.name}
                           </h4>
                           <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wide">
-                            {item.description}
+                            {item.category || item.size || "Item"}
                           </p>
                         </div>
-                        <button className="p-1.5 bg-white border border-gray-100 text-gray-400 rounded-lg hover:bg-gray-50 transition-all flex-shrink-0 shadow-sm">
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="p-1.5 bg-white border border-gray-100 text-gray-400 rounded-lg hover:bg-gray-50 transition-all flex-shrink-0 shadow-sm hover:text-red-500"
+                        >
                           <svg
                             width="10"
                             height="10"
@@ -167,13 +145,19 @@ export default function CartSidebar() {
                       </div>
                       <div className="flex items-center gap-4 mt-2">
                         <div className="flex items-center gap-3 bg-gray-100 px-3 py-1 rounded-full border border-gray-200/50">
-                          <button className="text-gray-400 hover:text-gray-900 font-bold text-xs">
+                          <button
+                            onClick={() => updateQuantity(item.id, -1)}
+                            className="text-gray-400 hover:text-gray-900 font-bold text-xs"
+                          >
                             -
                           </button>
                           <span className="text-xs font-black text-gray-700 w-3 text-center">
                             {item.quantity}
                           </span>
-                          <button className="text-gray-400 hover:text-gray-900 font-bold text-xs">
+                          <button
+                            onClick={() => updateQuantity(item.id, 1)}
+                            className="text-gray-400 hover:text-gray-900 font-bold text-xs"
+                          >
                             +
                           </button>
                         </div>
@@ -184,6 +168,12 @@ export default function CartSidebar() {
                     </div>
                   </div>
                 ))}
+                {cartItems.length === 0 && (
+                  <div className="text-center py-10 opacity-50">
+                    <div className="text-4xl mb-4">🛒</div>
+                    <p className="text-sm font-bold">Your cart is empty.</p>
+                  </div>
+                )}
               </div>
 
               {/* Dashed Line Section (Aligns with Cut-outs) */}
@@ -212,7 +202,7 @@ export default function CartSidebar() {
                     Sub Total
                   </span>
                   <span className="text-xs font-extrabold text-[#1a1a1a]">
-                    ${subtotal.toFixed(2)}
+                    ${cartSubtotal.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center px-1">

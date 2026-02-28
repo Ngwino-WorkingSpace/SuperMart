@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "../context/CartContext";
 
 interface ProductCardProps {
   id?: string;
@@ -17,7 +18,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
-  id = "1",
+  id,
   name,
   image,
   weight,
@@ -28,11 +29,29 @@ export default function ProductCard({
   category = "Fruits & Vegetables",
   variant = "vertical",
 }: ProductCardProps) {
+  const { addToCart } = useCart();
   const stars = Array.from({ length: 5 }, (_, i) => i < Math.floor(rating));
+
+  // Determine a stable ID for the cart (use provided ID, or generate from name)
+  const productId = id || name.toLowerCase().replace(/\s+/g, '-');
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({
+      id: productId,
+      name,
+      image,
+      price,
+      quantity: 1,
+      category,
+      size: weight,
+    });
+  };
 
   if (variant === "horizontal") {
     return (
-      <Link href={`/product/${id}`} className="block h-full cursor-pointer">
+      <Link href={`/product/${productId}`} className="block h-full cursor-pointer">
         <div className="flex flex-row items-center !bg-white !rounded-xl !border !border-gray-100 !overflow-hidden group !h-auto relative">
           {badge && (
             <span
@@ -89,7 +108,10 @@ export default function ProductCard({
               </div>
 
               <div className="flex items-center gap-2">
-                <button className="flex-1 h-9 rounded-lg border border-gray-100 text-[9px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm active:scale-95">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 h-9 rounded-lg border border-gray-100 text-[9px] font-bold uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm active:scale-95"
+                >
                   + Cart
                 </button>
                 <button className="flex-1 h-9 rounded-lg bg-[#1a1a1a] text-white text-[9px] font-bold uppercase tracking-widest hover:bg-[#fc7d00] transition-all shadow-sm active:scale-95">
@@ -104,7 +126,7 @@ export default function ProductCard({
   }
 
   return (
-    <Link href={`/product/${id}`} className="block h-full cursor-pointer">
+    <Link href={`/product/${productId}`} className="block h-full cursor-pointer">
       <div className="product-card h-full">
         {badge && (
           <span
@@ -147,13 +169,9 @@ export default function ProductCard({
               )}
             </div>
             <button
-              className="product-add-btn"
+              className="product-add-btn z-20 relative"
               aria-label="Add to cart"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // Cart logic placeholder
-              }}
+              onClick={handleAddToCart}
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path
