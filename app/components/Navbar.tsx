@@ -33,7 +33,7 @@ export default function Navbar() {
             { label: "About", href: "/about" },
             { label: "Shop", dropdown: true, href: "/shop" },
             { label: "Pages", dropdown: true, href: "#" },
-            { label: "Blog", href: "#" },
+            { label: "Restaurant", href: "/restaurant" },
             { label: "Contact", href: "/contact" },
           ].map((link) => {
             // Very simple active state logic
