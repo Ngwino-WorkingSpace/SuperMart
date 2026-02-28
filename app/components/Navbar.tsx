@@ -25,42 +25,47 @@ export default function Navbar() {
         {/* Nav links - Center */}
         <div className="flex items-center justify-center gap-8">
           {[
-            { label: "Home", active: true, href: "/" },
-            { label: "About", active: false, href: "#" },
-            { label: "Shop", active: false, dropdown: true, href: "/shop" },
-            { label: "Pages", active: false, dropdown: true, href: "#" },
-            { label: "Blog", active: false, href: "#" },
-            { label: "Contact", active: false, href: "#" },
-          ].map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`text-sm font-medium transition-colors flex items-center gap-1 ${
-                link.active
-                  ? "text-[#fc7d00]"
-                  : "text-gray-700 hover:text-[#fc7d00]"
-              }`}
-            >
-              {link.label}
-              {link.dropdown && (
-                <svg
-                  width="10"
-                  height="6"
-                  viewBox="0 0 10 6"
-                  fill="none"
-                  className="opacity-50"
-                >
-                  <path
-                    d="M1 1L5 5L9 1"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
-            </a>
-          ))}
+            { label: "Home", href: "/" },
+            { label: "About", href: "/about" },
+            { label: "Shop", dropdown: true, href: "/shop" },
+            { label: "Pages", dropdown: true, href: "#" },
+            { label: "Blog", href: "#" },
+            { label: "Contact", href: "#" },
+          ].map((link) => {
+            // Very simple active state logic
+            // For a real app, use usePathname from next/navigation
+            const isActive = typeof window !== 'undefined' ? window.location.pathname === link.href : false;
+
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`text-sm font-medium transition-colors flex items-center gap-1 ${isActive
+                    ? "text-[#fc7d00]"
+                    : "text-gray-700 hover:text-[#fc7d00]"
+                  }`}
+              >
+                {link.label}
+                {link.dropdown && (
+                  <svg
+                    width="10"
+                    height="6"
+                    viewBox="0 0 10 6"
+                    fill="none"
+                    className="opacity-50"
+                  >
+                    <path
+                      d="M1 1L5 5L9 1"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </a>
+            );
+          })}
         </div>
 
         {/* Actions - Right */}
