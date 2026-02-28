@@ -3,6 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "../context/CartContext";
+import { useRouter } from "next/navigation";
 
 const cartItems = [
   {
@@ -25,6 +26,12 @@ const cartItems = [
 
 export default function CartSidebar() {
   const { isCartOpen, closeCart } = useCart();
+  const router = useRouter();
+
+  const handleConfirmOrder = () => {
+    closeCart();
+    router.push("/checkout");
+  };
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -227,7 +234,10 @@ export default function CartSidebar() {
               </div>
 
               {/* Confirm Order Button */}
-              <button className="w-full bg-[#1a1a1a] hover:bg-black text-white font-black py-3.5 rounded-2xl text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-lg shadow-black/10">
+              <button
+                onClick={handleConfirmOrder}
+                className="w-full bg-[#1a1a1a] hover:bg-black text-white font-black py-3.5 rounded-2xl text-[11px] uppercase tracking-widest transition-all active:scale-[0.98] shadow-lg shadow-black/10"
+              >
                 Confirm Order
               </button>
             </div>
