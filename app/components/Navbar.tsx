@@ -7,7 +7,7 @@ import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { toggleCart, cartCount } = useCart();
+  const { toggleCart, cartCount, isLoaded } = useCart();
 
   const isHome = pathname === "/";
 
@@ -128,9 +128,11 @@ export default function Navbar() {
                 <path d="M3 6h18" />
                 <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#fc7d00] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-[#fc7d00]/20">
-                {cartCount}
-              </span>
+              {isLoaded && cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#fc7d00] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-lg shadow-[#fc7d00]/20">
+                  {cartCount}
+                </span>
+              )}
             </button>
           </div>
 
