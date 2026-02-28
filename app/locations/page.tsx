@@ -1,111 +1,212 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-// Rwanda Province SVG Paths (Simplified for representation)
-// In a real app, these would be precise paths. These are approximations for the UI.
-const provinces = [
+// Dynamically import Leaflet map components (requires browser DOM)
+const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+const Popup = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Popup),
+  { ssr: false }
+);
+
+// All 11 Simba Supermarket branches in Kigali, Rwanda
+const branches = [
   {
-    id: "RW01",
-    name: "Kigali City",
-    d: "M320 280 L350 280 L350 310 L320 310 Z", // Placeholder
-    fill: "#fc7d00",
-    branches: [
-      {
-        id: 1,
-        name: "Kigali City Center",
-        address: "KN 2 St, Kigali",
-        phone: "+250 123 456 789",
-        email: "kigali.cc@simba.id",
-        type: "Full Service",
-      },
-      {
-        id: 2,
-        name: "Remera Hub",
-        address: "KG 11 Ave, Remera",
-        phone: "+250 987 654 321",
-        email: "remera@simba.id",
-        type: "Express",
-      },
-    ],
+    id: 1,
+    name: "Simba Centenary",
+    address: "KN 4 Ave, Centenary House, Kigali",
+    phone: "+250 788 300 001",
+    email: "centenary@simba.rw",
+    type: "Full Service",
+    coordinates: [-1.9536, 30.0606] as [number, number],
+    rating: 4.9,
+    reviews: 487,
+    distance: "0.3 km away",
+    status: "Open",
   },
   {
-    id: "RW03",
-    name: "Northern Province",
-    d: "M280 180 L400 180 L420 250 L250 250 Z", // Placeholder
-    fill: "#fc7d00",
-    branches: [
-      {
-        id: 3,
-        name: "Musanze Branch",
-        address: "Ruhengeri Road, Musanze",
-        phone: "+250 555 666 777",
-        email: "musanze@simba.id",
-        type: "Distribution",
-      },
-    ],
+    id: 2,
+    name: "Simba Gishushu",
+    address: "KG 9 Ave, Gishushu, Kigali",
+    phone: "+250 788 300 002",
+    email: "gishushu@simba.rw",
+    type: "Full Service",
+    coordinates: [-1.9550, 30.0900] as [number, number],
+    rating: 4.8,
+    reviews: 352,
+    distance: "1.8 km away",
+    status: "Open",
   },
   {
-    id: "RW04",
-    name: "Western Province",
-    d: "M150 220 L250 220 L280 450 L120 450 Z", // Placeholder
-    fill: "#fc7d00",
-    branches: [
-      {
-        id: 4,
-        name: "Gisenyi Waterfront",
-        address: "Lake Kivu Rd, Rubavu",
-        phone: "+250 111 222 333",
-        email: "gisenyi@simba.id",
-        type: "Full Service",
-      },
-    ],
+    id: 3,
+    name: "Simba Kimironko",
+    address: "KG 17 Ave, Kimironko, Kigali",
+    phone: "+250 788 300 003",
+    email: "kimironko@simba.rw",
+    type: "Full Service",
+    coordinates: [-1.9410, 30.1130] as [number, number],
+    rating: 4.7,
+    reviews: 289,
+    distance: "3.5 km away",
+    status: "Open",
   },
   {
-    id: "RW05",
-    name: "Southern Province",
-    d: "M250 350 L350 350 L400 550 L200 550 Z", // Placeholder
-    fill: "#fc7d00",
-    branches: [
-      {
-        id: 5,
-        name: "Huye Academic",
-        address: "University Ave, Huye",
-        phone: "+250 444 888 999",
-        email: "huye@simba.id",
-        type: "Express",
-      },
-    ],
+    id: 4,
+    name: "Simba Kicukiro",
+    address: "KK 15 Ave, Kicukiro, Kigali",
+    phone: "+250 788 300 004",
+    email: "kicukiro@simba.rw",
+    type: "Full Service",
+    coordinates: [-1.9741, 30.0781] as [number, number],
+    rating: 4.6,
+    reviews: 215,
+    distance: "2.1 km away",
+    status: "Open",
   },
   {
-    id: "RW02",
-    name: "Eastern Province",
-    d: "M450 250 L600 250 L620 500 L420 500 Z", // Placeholder
-    fill: "#fc7d00",
-    branches: [
-      {
-        id: 6,
-        name: "Kayonza Junction",
-        address: "Highway Blvd, Kayonza",
-        phone: "+250 000 111 222",
-        email: "kayonza@simba.id",
-        type: "Hub",
-      },
-    ],
+    id: 5,
+    name: "Simba Kigali Heights",
+    address: "KG 7 Ave, Kigali Heights, Kiyovu",
+    phone: "+250 788 300 005",
+    email: "heights@simba.rw",
+    type: "Premium",
+    coordinates: [-1.9530, 30.0630] as [number, number],
+    rating: 4.9,
+    reviews: 523,
+    distance: "0.5 km away",
+    status: "Open",
+  },
+  {
+    id: 6,
+    name: "Simba UTC",
+    address: "KN 2 Ave, UTC Building, Kigali",
+    phone: "+250 788 300 006",
+    email: "utc@simba.rw",
+    type: "Express",
+    coordinates: [-1.9500, 30.0590] as [number, number],
+    rating: 4.5,
+    reviews: 198,
+    distance: "0.8 km away",
+    status: "Open",
+  },
+  {
+    id: 7,
+    name: "Simba Gacuriro",
+    address: "KG 28 Ave, Gacuriro, Kigali",
+    phone: "+250 788 300 007",
+    email: "gacuriro@simba.rw",
+    type: "Full Service",
+    coordinates: [-1.9180, 30.1120] as [number, number],
+    rating: 4.6,
+    reviews: 176,
+    distance: "5.2 km away",
+    status: "Open",
+  },
+  {
+    id: 8,
+    name: "Simba Gikondo",
+    address: "KK 31 Ave, Gikondo, Kigali",
+    phone: "+250 788 300 008",
+    email: "gikondo@simba.rw",
+    type: "Hub",
+    coordinates: [-1.9720, 30.0750] as [number, number],
+    rating: 4.4,
+    reviews: 143,
+    distance: "1.9 km away",
+    status: "Open",
+  },
+  {
+    id: 9,
+    name: "Simba Sonatube",
+    address: "KK 19 Ave, Sonatube, Kigali",
+    phone: "+250 788 300 009",
+    email: "sonatube@simba.rw",
+    type: "Express",
+    coordinates: [-1.9680, 30.0820] as [number, number],
+    rating: 4.3,
+    reviews: 112,
+    distance: "1.5 km away",
+    status: "Open",
+  },
+  {
+    id: 10,
+    name: "Simba Kisimenti",
+    address: "KG 11 Ave, Kisimenti, Remera",
+    phone: "+250 788 300 010",
+    email: "kisimenti@simba.rw",
+    type: "Full Service",
+    coordinates: [-1.9520, 30.0940] as [number, number],
+    rating: 4.7,
+    reviews: 267,
+    distance: "2.0 km away",
+    status: "Open",
+  },
+  {
+    id: 11,
+    name: "Simba Rebero",
+    address: "KK 5 Rd, Rebero, Kigali",
+    phone: "+250 788 300 011",
+    email: "rebero@simba.rw",
+    type: "Express",
+    coordinates: [-1.9800, 30.0850] as [number, number],
+    rating: 4.5,
+    reviews: 156,
+    distance: "3.0 km away",
+    status: "Open",
   },
 ];
 
-// Actual Rwanda Path for the whole country to use as background
-const rwandaOutline =
-  "M318.17 12.39L338.3 22.82L371.3 24.38L375.22 42.12L400.08 51.52L409.25 79.7L434.72 82.84L455.62 101.65L475.21 106.35L485.66 128.3L524.84 133.01L532.68 153.39L537.9 220.81L558.81 241.19L574.48 241.19L592.77 249.03L607.13 294.5L626.73 308.61L626.73 328.98L641.1 336.83L641.1 405.81L655.47 433.99L655.45 464.33C655.45 464.33 656.76 469.79 658.07 472.16L659.38 481.56L671.13 495.67L673.74 516.03L669.83 522.3L637.19 519.16L628.05 528.57L620.21 527.01L592.78 541.12L581.02 536.41L567.96 541.12L560.13 534.85L551 537.98L540.54 534.85L532.69 542.69C532.69 542.69 527.46 544.24 524.85 545.83L513.1 542.69L502.66 547.39L490.9 541.12L475.23 544.25L463.48 539.54L456.95 541.12L446.5 536.41L428.21 544.25L416.46 539.54L412.54 527.01L399.47 523.87L386.41 531.71L370.74 523.87L348.54 533.28L343.32 542.69L311.97 542.69L301.53 528.57L289.77 531.71L274.1 522.3L254.51 528.57L241.45 523.87L228.38 528.57L215.32 523.87L215.34 509.68C215.34 509.68 211.39 509.7 207.48 506.63L191.81 506.63L182.68 494.08L174.84 498.78L170.92 489.37L153.94 489.37L147.42 481.54L133.05 487.8L130.43 475.26L125.21 475.26L112.16 459.58L104.32 464.29L105.62 443.91L99.09 443.91L91.26 431.37L96.48 423.53L86.03 414.12L83.43 400.02L87.35 390.6L82.12 378.07L87.35 370.23L83.43 357.69L93.88 349.85L93.88 338.88L82.12 331.05L75.61 316.94L87.36 302.83L80.83 293.43L87.36 284.02L80.84 274.63L87.36 266.78L100.43 268.35L112.17 257.38L129.17 262.08L143.53 252.68L156.6 257.38L173.57 241.71L193.16 244.84L208.84 230.73L211.45 204.09L223.2 196.25L215.37 172.74L219.29 157.07L227.13 147.66L238.88 149.23L249.33 133.56L267.62 128.85L271.53 113.18L280.68 110.05L289.82 119.45L310.71 103.78L314.63 77.13L327.69 64.59L326.39 36.38L318.55 31.68L318.17 12.39Z";
-
-const branches = provinces.flatMap((p) => p.branches);
-
 export default function LocationsPage() {
   const [selectedBranch, setSelectedBranch] = useState(branches[0]);
+  const [mounted, setMounted] = useState(false);
+  const [defaultIcon, setDefaultIcon] = useState<any>(null);
+  const [selectedIcon, setSelectedIcon] = useState<any>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== "undefined") {
+      import("leaflet").then((L) => {
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        // Prominent orange marker for all branches
+        setDefaultIcon(
+          L.divIcon({
+            className: "simba-branch-marker",
+            html: `<div style="width:32px;height:32px;background:#fc7d00;border:3px solid white;border-radius:50%;box-shadow:0 2px 10px rgba(252,125,0,.45);display:flex;align-items:center;justify-content:center;position:relative;"><svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5'><path d='m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7'/><path d='M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8'/><path d='M2 7h20'/></svg></div>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -30],
+          })
+        );
+        // Bigger highlighted marker for selected branch
+        setSelectedIcon(
+          L.divIcon({
+            className: "simba-selected-marker",
+            html: `<div style="width:44px;height:44px;background:#1a1c1e;border:3px solid #fc7d00;border-radius:50%;box-shadow:0 4px 20px rgba(252,125,0,.6);display:flex;align-items:center;justify-content:center;animation:pulse-marker 2s infinite;"><svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#fc7d00' stroke-width='2.5'><path d='m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7'/><path d='M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8'/><path d='M2 7h20'/></svg></div>`,
+            iconSize: [44, 44],
+            iconAnchor: [22, 44],
+            popupAnchor: [0, -42],
+          })
+        );
+      });
+    }
+  }, []);
+
+  const mapCenter: [number, number] = selectedBranch?.coordinates || [-1.9441, 30.0619];
 
   return (
     <div className="min-h-screen bg-[#fffcf8] text-[#1a1a1a] flex flex-col font-sans">
@@ -113,23 +214,10 @@ export default function LocationsPage() {
 
       <main className="flex-1 flex flex-col md:flex-row h-[calc(100vh-64px)] overflow-hidden">
         {/* Left Side: Map */}
-        <div className="flex-1 relative bg-[#f0f4f8] p-4 md:p-8 flex items-center justify-center overflow-hidden">
+        <div className="flex-1 relative bg-[#f0f4f8] overflow-hidden">
           {/* Map Controls */}
-          <div className="absolute top-8 left-8 z-10 flex flex-col gap-2">
-            <button className="w-10 h-10 bg-white shadow-lg rounded-lg flex items-center justify-center hover:bg-gray-50 transition-all">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-              </svg>
-            </button>
+          {/* Map Controls */}
+          <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-2">
             <div className="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
               <button className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider bg-gray-100 border-b border-gray-200">
                 Map
@@ -141,7 +229,8 @@ export default function LocationsPage() {
           </div>
 
           {/* Search Overlay */}
-          <div className="absolute top-8 right-8 z-10 w-full max-w-[320px]">
+          {/* Search Overlay */}
+          <div className="absolute top-4 right-4 z-[1000] w-full max-w-[320px]">
             <div className="bg-white shadow-xl rounded-full p-1 flex items-center border border-gray-100">
               <input
                 type="text"
@@ -154,109 +243,169 @@ export default function LocationsPage() {
             </div>
           </div>
 
-          {/* SVG Map of Rwanda */}
-          <div className="w-full h-full max-w-[800px] max-h-[600px] relative">
-            <svg
-              viewBox="0 0 750 600"
-              className="w-full h-full drop-shadow-2xl"
-              style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.1))" }}
-            >
-              {/* Background Glow */}
-              <circle
-                cx="375"
-                cy="300"
-                r="250"
-                fill="url(#mapGlow)"
-                opacity="0.5"
-              />
-              <defs>
-                <radialGradient id="mapGlow">
-                  <stop offset="0%" stopColor="#fc7d00" stopOpacity="0.1" />
-                  <stop offset="100%" stopColor="#fc7d00" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-
-              {/* Rwanda Base Shape */}
-              <path
-                d={rwandaOutline}
-                fill="#ffffff"
-                stroke="#e2e8f0"
-                strokeWidth="2"
-              />
-
-              {/* Provinces / Regions interaction */}
-              {provinces.map((province) => (
-                <g key={province.id}>
-                  {/* Simplified Province Interactive Area */}
-                  {/* In a real map, these would be the actual province paths */}
-                </g>
-              ))}
-
-              {/* Animated Markers for Branches */}
-              {branches.map((branch, idx) => (
-                <motion.g
-                  key={branch.id}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.5 + idx * 0.1, type: "spring" }}
-                  onClick={() => setSelectedBranch(branch)}
-                  className="cursor-pointer group"
+          {/* Interactive Leaflet Map of Rwanda */}
+          {/* Full-bleed Leaflet Map */}
+          <div className="absolute inset-0">
+            {mounted && typeof window !== "undefined" ? (
+              <>
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                <style>{`
+                  @keyframes pulse-marker {
+                    0%, 100% { box-shadow: 0 4px 20px rgba(252,125,0,.6); }
+                    50% { box-shadow: 0 4px 30px rgba(252,125,0,.9), 0 0 0 12px rgba(252,125,0,.15); }
+                  }
+                  .leaflet-popup-content-wrapper {
+                    padding: 0 !important;
+                    border-radius: 14px !important;
+                    overflow: hidden;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.12) !important;
+                  }
+                  .leaflet-popup-content {
+                    margin: 0 !important;
+                    width: auto !important;
+                  }
+                  .leaflet-popup-tip {
+                    box-shadow: none !important;
+                  }
+                  .leaflet-popup-close-button {
+                    top: 6px !important;
+                    right: 6px !important;
+                    width: 22px !important;
+                    height: 22px !important;
+                    font-size: 16px !important;
+                    color: #999 !important;
+                    background: #f5f5f5 !important;
+                    border-radius: 50% !important;
+                    display: flex !important;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10;
+                  }
+                  .leaflet-popup-close-button:hover {
+                    color: #333 !important;
+                    background: #eee !important;
+                  }
+                `}</style>
+                <MapContainer
+                  center={selectedBranch ? mapCenter : [-1.9550, 30.0800]}
+                  zoom={selectedBranch ? 15 : 13}
+                  scrollWheelZoom={true}
+                  style={{ height: "100%", width: "100%", zIndex: 0 }}
+                  key={selectedBranch?.id || "default"}
+                  maxBounds={[[-2.85, 28.85], [-1.04, 30.90]]}
+                  maxBoundsViscosity={1.0}
+                  minZoom={8}
+                  maxZoom={18}
                 >
-                  {/* Pulse Effect */}
-                  <motion.circle
-                    cx={150 + idx * 80} // Distributed for visualization
-                    cy={150 + idx * 60}
-                    r="12"
-                    fill="#fc7d00"
-                    opacity="0.3"
-                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.1, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                   />
-                  {/* Marker Pin */}
-                  <circle
-                    cx={150 + idx * 80}
-                    cy={150 + idx * 60}
-                    r="8"
-                    fill={
-                      selectedBranch.id === branch.id ? "#1a1c1e" : "#fc7d00"
-                    }
-                    className="transition-colors duration-300"
-                  />
-                  <text
-                    x={150 + idx * 80}
-                    cy={150 + idx * 60 + 4}
-                    textAnchor="middle"
-                    fill="white"
-                    fontSize="8"
-                    fontWeight="bold"
-                    className="pointer-events-none"
-                  >
-                    {idx + 1}
-                  </text>
+                  {branches.map((branch) => {
+                    const isSelected = selectedBranch?.id === branch.id;
+                    return (
+                      <Marker
+                        key={branch.id}
+                        position={branch.coordinates}
+                        icon={isSelected && selectedIcon ? selectedIcon : defaultIcon}
+                        eventHandlers={{ click: () => setSelectedBranch(branch) }}
+                      >
+                        <Popup>
+                          <div style={{ width: 320, fontFamily: 'system-ui, -apple-system, sans-serif', padding: 0 }}>
+                            {/* Top section: Photo + Info */}
+                            <div style={{ display: 'flex', gap: 12, padding: '12px 12px 8px 12px' }}>
+                              {/* Store Photo */}
+                              <div style={{ width: 80, height: 80, borderRadius: 10, overflow: 'hidden', flexShrink: 0, background: '#f3f3f3' }}>
+                                <img
+                                  src="/images/cat-produce.png"
+                                  alt={branch.name}
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                              </div>
+                              {/* Info */}
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1a1a1a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 160 }}>
+                                    Simba — {branch.name}
+                                  </span>
+                                  <span style={{ fontSize: 10, fontWeight: 700, background: '#fc7d00', color: 'white', padding: '3px 10px', borderRadius: 20, flexShrink: 0 }}>
+                                    {branch.status}
+                                  </span>
+                                </div>
+                                {/* Rating */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 6 }}>
+                                  <span style={{ color: '#fbbf24', fontSize: 14 }}>★</span>
+                                  <span style={{ fontWeight: 700, fontSize: 12, color: '#1a1a1a' }}>{branch.rating}</span>
+                                  <span style={{ fontSize: 11, color: '#999' }}>({branch.reviews} reviews)</span>
+                                </div>
+                                {/* Address */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#666', marginBottom: 3 }}>
+                                  <span style={{ flexShrink: 0 }}>�</span>
+                                  <span>{branch.address}</span>
+                                </div>
+                                {/* Distance */}
+                                <div style={{ fontSize: 11, color: '#fc7d00', fontWeight: 600, marginBottom: 3, paddingLeft: 18 }}>
+                                  {branch.distance}
+                                </div>
+                                {/* Phone */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#666' }}>
+                                  <span style={{ flexShrink: 0 }}>📞</span>
+                                  <span>{branch.phone}</span>
+                                </div>
+                              </div>
+                            </div>
+                            {/* Separator */}
+                            <div style={{ height: 1, background: '#f0f0f0', margin: '4px 12px' }} />
+                            {/* Action Buttons */}
+                            <div style={{ display: 'flex', gap: 8, padding: '8px 12px 12px 12px' }}>
+                              <a
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${branch.coordinates[0]},${branch.coordinates[1]}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: '#fc7d00', color: 'white', fontWeight: 700, fontSize: 12, padding: '10px 0', borderRadius: 10, textDecoration: 'none', cursor: 'pointer', border: 'none' }}
+                              >
+                                📍 Get Directions
+                              </a>
+                              <a
+                                href={`tel:${branch.phone}`}
+                                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, background: 'white', color: '#333', fontWeight: 700, fontSize: 12, padding: '10px 0', borderRadius: 10, textDecoration: 'none', cursor: 'pointer', border: '1.5px solid #e5e5e5' }}
+                              >
+                                📞 Call Now
+                              </a>
+                            </div>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    );
+                  })}
+                </MapContainer>
+              </>
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center animate-pulse">
+                <div className="flex flex-col items-center gap-2 text-gray-400">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <span className="text-xs font-semibold">Loading map...</span>
+                </div>
+              </div>
+            )}
 
-                  {/* Label on Hover */}
-                  <g className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <rect
-                      x={150 + idx * 80 + 12}
-                      y={150 + idx * 60 - 15}
-                      width="100"
-                      height="24"
-                      rx="4"
-                      fill="#1a1c1e"
-                    />
-                    <text
-                      x={150 + idx * 80 + 20}
-                      y={150 + idx * 60 + 1}
-                      fill="white"
-                      fontSize="9"
-                      fontWeight="bold"
-                    >
-                      Click to see details
-                    </text>
-                  </g>
-                </motion.g>
-              ))}
-            </svg>
+            {/* Legend */}
+            <div className="absolute bottom-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 p-3">
+              <h5 className="text-[10px] font-black uppercase tracking-wider text-gray-400 mb-2">Legend</h5>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#2b7cff]" />
+                  <span className="text-[10px] font-medium text-gray-600">Simba Branch</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#fc7d00] ring-2 ring-[#fc7d00]/30 ring-offset-1" />
+                  <span className="text-[10px] font-medium text-gray-600">Selected Branch</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Floating 'Hide' Button for Sidebar (Design consistency) */}

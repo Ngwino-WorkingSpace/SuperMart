@@ -179,10 +179,10 @@ export default function ContactUsPage() {
                                 <div className="p-1.5 bg-gray-50 rounded-lg text-[#fc7d00]">
                                     <MapPinIcon />
                                 </div>
-                                <h4 className="font-bold text-sm tracking-wide">London Eye London</h4>
+                                <h4 className="font-bold text-sm tracking-wide">Kigali, Rwanda</h4>
                             </div>
                             <p className="text-[9px] text-gray-500 font-medium leading-relaxed">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus luctus.
+                                KG 11 Ave, Kigali City Center, Rwanda. Visit our flagship store anytime.
                             </p>
                         </div>
 
@@ -193,10 +193,10 @@ export default function ContactUsPage() {
                 <section className="max-w-4xl mx-auto px-4 mt-8">
                     <div className="w-full h-[240px] md:h-[300px] rounded-2xl overflow-hidden shadow-md border border-gray-100 relative">
                         <LeafletMap
-                            center={[51.5033, -0.1196]}
+                            center={[-1.9403, 29.8739]}
                             zoom={15}
-                            markerPosition={[51.5033, -0.1196]}
-                            popupText="SuperMart — London Eye Branch"
+                            markerPosition={[-1.9403, 29.8739]}
+                            popupText="SuperMart — Kigali Branch"
                         />
                     </div>
                 </section>

@@ -32,6 +32,7 @@ export default function Navbar() {
             { label: "Home", href: "/" },
             { label: "About", href: "/about" },
             { label: "Shop", dropdown: true, href: "/shop" },
+            { label: "Locations", href: "/locations" },
             { label: "Restaurant", href: "/restaurant" },
             { label: "Contact", href: "/contact" },
           ].map((link) => {
@@ -47,8 +48,8 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors flex items-center gap-1 ${isActive
-                    ? "text-[#fc7d00]"
-                    : "text-gray-700 hover:text-[#fc7d00]"
+                  ? "text-[#fc7d00]"
+                  : "text-gray-700 hover:text-[#fc7d00]"
                   }`}
               >
                 {link.label}
