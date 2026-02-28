@@ -21,13 +21,13 @@
 @theme inline {
   --color-background: #ffffff;
   --color-foreground: #1a1a1a;
-  --font-sans: 'Jost', sans-serif;
+  --font-sans: var(--font-jost), sans-serif;
 }
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
-  font-family: 'Jost', sans-serif;
+  font-family: var(--font-jost), sans-serif;
   overflow-x: hidden;
 }
 
@@ -296,7 +296,7 @@ body {
   transition: color 0.2s;
   border: none;
   background: none;
-  font-family: 'Jost', sans-serif;
+  font-family: var(--font-jost), sans-serif;
 }
 
 .filter-tab:hover,

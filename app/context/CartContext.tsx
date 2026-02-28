@@ -18,6 +18,7 @@ interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
   cartSubtotal: number;
+  isLoaded: boolean;
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -108,6 +109,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cartItems,
         cartCount,
         cartSubtotal,
+        isLoaded,
         toggleCart,
         openCart,
         closeCart,

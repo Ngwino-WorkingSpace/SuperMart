@@ -6,11 +6,13 @@ import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 
 export default function CheckoutPage() {
-  const { cartItems, cartSubtotal, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { cartItems, cartSubtotal, updateQuantity, removeFromCart, clearCart, isLoaded } = useCart();
 
   const discount = cartItems.length > 0 ? 30 : 0;
   const shipping = 0;
   const total = cartItems.length > 0 ? cartSubtotal - discount + shipping : 0;
+
+  if (!isLoaded) return null; // Prevent hydration error by waiting for local storage sync
 
   return (
     <div className="min-h-screen bg-[#fffaf5] text-[#1a1a1a] font-sans flex flex-col relative overflow-hidden">
