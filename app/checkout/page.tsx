@@ -1,12 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Alfa_Slab_One } from "next/font/google";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
-
-const alfa = Alfa_Slab_One({ weight: "400", subsets: ["latin"] });
 
 export default function CheckoutPage() {
   const { cartItems, cartSubtotal, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -57,12 +54,12 @@ export default function CheckoutPage() {
             {/* Items Card */}
             <div className="bg-white rounded-xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50">
               <div className="flex justify-between items-center mb-4">
-                <h2 className={`${alfa.className} text-lg tracking-wide text-[#fc7d00]`}>
+                <h2 className="font-bold text-lg tracking-wide text-[#fc7d00]">
                   Items <span className="text-gray-400 font-sans tracking-normal font-medium text-xs">({cartItems.length} items)</span>
                 </h2>
                 <button
                   onClick={clearCart}
-                  className={`text-[#e53e3e] flex items-center gap-1 ${alfa.className} text-xs tracking-wide hover:opacity-80 transition-opacity`}
+                  className="text-[#e53e3e] flex items-center gap-1 font-bold text-xs tracking-wide hover:opacity-80 transition-opacity"
                 >
                   <TrashIcon /> Remove all
                 </button>
@@ -76,7 +73,7 @@ export default function CheckoutPage() {
                     </div>
 
                     <div className="flex-1 py-0.5">
-                      <h3 className={`${alfa.className} text-base text-[#1a1a1a] mb-0.5 tracking-wide`}>
+                      <h3 className="font-bold text-base text-[#1a1a1a] mb-0.5 tracking-wide">
                         {item.name}
                       </h3>
                       <div className="space-y-0.5 mb-2.5">
@@ -107,7 +104,7 @@ export default function CheckoutPage() {
                       >
                         <CloseIcon />
                       </button>
-                      <span className={`${alfa.className} text-base text-[#1a1a1a] tracking-wide`}>
+                      <span className="font-bold text-base text-[#1a1a1a] tracking-wide">
                         ${(item.price * item.quantity).toFixed(2)}
                       </span>
                     </div>
@@ -122,7 +119,7 @@ export default function CheckoutPage() {
 
             {/* Order Summary Card */}
             <div className="bg-white rounded-xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50">
-              <h2 className={`${alfa.className} text-lg tracking-wide text-[#fc7d00] mb-4`}>
+              <h2 className="font-bold text-lg tracking-wide text-[#fc7d00] mb-4">
                 Order summary
               </h2>
 
@@ -146,10 +143,10 @@ export default function CheckoutPage() {
                 <div className="w-full h-px bg-orange-50/50" />
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className={`${alfa.className} text-base tracking-wide text-[#1a1a1a]`}>
+                  <span className="font-bold text-sm tracking-wide text-[#1a1a1a]">
                     Total Price
                   </span>
-                  <span className={`${alfa.className} text-base tracking-wide text-[#fc7d00]`}>
+                  <span className="font-bold text-base tracking-wide text-[#fc7d00]">
                     ${total.toFixed(2)}
                   </span>
                 </div>
@@ -159,9 +156,9 @@ export default function CheckoutPage() {
 
           {/* RIGHT COLUMN */}
           <div>
-            <div className="bg-white rounded-xl p-6 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50 sticky top-20">
-              <h2 className={`${alfa.className} text-xl tracking-wide text-[#fc7d00] mb-5`}>
-                Checkout
+            <div className="bg-white rounded-xl p-6 shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50 h-fit sticky top-24">
+              <h2 className="font-bold text-lg tracking-wide text-[#fc7d00] mb-5">
+                Order Summary
               </h2>
 
               {/* Payment Options */}
@@ -226,7 +223,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <button className={`w-full bg-gradient-to-r from-[#fc7d00] to-[#e67200] text-white py-3 rounded-lg mt-5 shadow-[0_4px_12px_rgb(252,125,0,0.25)] hover:opacity-90 transition-opacity active:scale-[0.98] ${alfa.className} text-base tracking-normal`}>
+                <button className={`w-full bg-gradient-to-r from-[#fc7d00] to-[#e67200] text-white py-3 rounded-lg mt-5 shadow-[0_4px_12px_rgb(252,125,0,0.25)] hover:opacity-90 transition-opacity active:scale-[0.98] font-bold text-base tracking-normal`}>
                   Pay now
                 </button>
               </form>
